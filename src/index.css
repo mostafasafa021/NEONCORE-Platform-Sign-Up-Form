@@ -1,0 +1,103 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Orbitron:wght@800&display=swap");
+@import "tailwindcss";
+/* ===========================
+   Theme
+   =========================== */
+
+@theme {
+  /* Colors */
+
+  --color-neutral-50: hsl(204 60% 97%);
+  --color-neutral-100: hsl(208 49% 92%);
+  --color-neutral-300: hsl(211 18% 68%);
+  --color-neutral-400: hsl(211 13% 55%);
+  --color-neutral-500: hsl(211 14% 50%);
+  --color-neutral-600: hsl(210 18% 42%);
+  --color-neutral-700: hsl(211 22% 24%);
+  --color-neutral-800: hsl(211 30% 13%);
+  --color-neutral-900: hsl(210 39% 7%);
+  --color-neutral-950: hsl(214 37% 4%);
+
+  --color-lime-500: hsl(77 90% 59%);
+  --color-lime-700: hsl(77 67% 39%);
+
+  --color-red-400: hsl(4 100% 74%);
+  --color-amber-400: hsl(40 100% 65%);
+
+  --color-navy-950: hsl(214 60% 2%);
+
+  /* Alpha colors */
+
+  --color-lime-alpha-60: hsl(77 90% 59% / 0.6);
+  --color-lime-alpha-40: hsl(77 90% 59% / 0.4);
+
+  --color-navy-alpha-80: hsl(214 60% 2% / 0.8);
+  --color-navy-alpha-60: hsl(214 60% 2% / 0.6);
+
+  /* Fonts */
+
+  --font-orbitron: "Orbitron", sans-serif;
+  --font-jetbrains: "JetBrains Mono", monospace;
+
+  /* Inputs Font Size */
+  --text-inputs: 16px;
+}
+
+/* ===========================
+   Components
+   =========================== */
+
+@layer components {
+  .preset-1 {
+    @apply font-orbitron font-extrabold
+      text-[36px] leading-[40px]
+      md:text-[40px] md:leading-[48px]
+      lg:text-[72px] lg:leading-[80px]
+      tracking-[0.04em] uppercase;
+  }
+
+  .preset-2 {
+    @apply font-orbitron font-extrabold
+      text-2xl leading-8
+      tracking-[0.04em];
+  }
+
+  .preset-3 {
+    @apply font-orbitron font-extrabold
+      text-base leading-6
+      tracking-[0.16em];
+  }
+
+  .preset-4 {
+    @apply font-jetbrains font-normal
+      text-base leading-6;
+  }
+
+  .preset-4-password {
+    @apply font-jetbrains font-normal
+      text-base leading-6
+      tracking-[0.16em];
+  }
+
+  .preset-5 {
+    @apply font-jetbrains font-normal
+      text-sm leading-6;
+  }
+
+  .preset-5-bold {
+    @apply font-jetbrains font-bold
+      text-sm leading-6
+      tracking-[0.16em] uppercase;
+  }
+
+  .preset-6 {
+    @apply font-jetbrains font-normal
+      text-xs leading-4
+      tracking-[0.16em] uppercase;
+  }
+
+  .preset-7 {
+    @apply font-jetbrains font-normal
+      text-xs leading-4;
+  }
+}
