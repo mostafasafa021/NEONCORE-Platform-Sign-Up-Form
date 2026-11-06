@@ -1,18 +1,18 @@
-import logo from './assests/images/logo.svg'
-import patternBackdrop from './assests/images/pattern-backdrop.svg'
-import eyeIcon from './assests/images/icon-eye.svg'
-import './App.css'
+import logo from "./assests/images/logo.svg";
+import patternBackdrop from "./assests/images/pattern-backdrop.svg";
+import eyeIcon from "./assests/images/icon-eye.svg";
+import "./App.css";
 
 const operatorRows = [
-  ['Callsign', 'Pending'],
-  ['Email', 'Pending'],
-  ['Password', 'Pending'],
-  ['Confirm', 'Pending'],
-  ['Terms', 'Required'],
-]
+  ["Callsign", "Pending"],
+  ["Email", "Pending"],
+  ["Password", "Pending"],
+  ["Confirm", "Pending"],
+  ["Terms", "Required"],
+];
 
 const inputClasses =
-  'mt-2 h-12 w-full border border-neutral-600 bg-navy-950 px-4 font-jetbrains text-inputs text-neutral-100 placeholder:text-neutral-500 focus-visible:border-lime-500 focus-visible:outline-none'
+  "mt-2 min-h-13 w-full border border-neutral-600 bg-navy-950 px-4 py-3 font-jetbrains text-inputs text-neutral-100 placeholder:text-neutral-500 focus-visible:border-lime-500 focus-visible:outline-2 focus-visible:outline-lime-500 focus-visible:outline-offset-3 hover:border-neutral-50 transition-color";
 
 function App() {
   return (
@@ -25,7 +25,10 @@ function App() {
       />
 
       <div className="relative z-10 mx-auto grid min-h-screen w-full max-w-[1120px] content-start gap-7 py-8 lg:grid-cols-[minmax(0,1fr)_480px] lg:items-center lg:gap-8 lg:py-0 xl:gap-20">
-        <section aria-label="NEONCORE sign-up introduction" className="min-w-0 lg:my-auto">
+        <section
+          aria-label="NEONCORE sign-up introduction"
+          className="min-w-0 lg:my-auto"
+        >
           <div className="flex items-center justify-between lg:block">
             <img src={logo} alt="NEONCORE" className="h-8 w-[169px]" />
             <p className="preset-6 text-neutral-400 lg:hidden">0/5 ready</p>
@@ -50,10 +53,15 @@ function App() {
             Initialize your NEONCORE identity
           </p>
 
-          <section aria-label="Operator ID status" className="mt-7 border-t border-neutral-700 lg:mt-16">
+          <section
+            aria-label="Operator ID status"
+            className="mt-7 border-t border-neutral-700 lg:mt-16"
+          >
             <div className="flex items-center justify-between pt-4 lg:pt-6">
               <h2 className="preset-6 text-neutral-400">Operator ID</h2>
-              <p className="preset-6 hidden text-neutral-400 lg:block">0/5 ready</p>
+              <p className="preset-6 hidden text-neutral-400 lg:block">
+                0/5 ready
+              </p>
               <p className="preset-6 text-neutral-400 lg:hidden">Unassigned</p>
             </div>
 
@@ -68,7 +76,10 @@ function App() {
                   className="preset-6 flex items-center gap-3 text-neutral-400"
                 >
                   <span>{label}</span>
-                  <span aria-hidden="true" className="mb-1 flex-1 border-b border-dotted border-neutral-700" />
+                  <span
+                    aria-hidden="true"
+                    className="mb-1 flex-1 border-b border-dotted border-neutral-700"
+                  />
                   <span>{status}</span>
                 </li>
               ))}
@@ -93,17 +104,19 @@ function App() {
             <h2 id="signup-title" className="preset-6 text-neutral-100">
               New operator
             </h2>
-            <p className="preset-6 hidden text-neutral-400 md:block">All fields required</p>
+            <p className="preset-6 hidden text-neutral-400 md:block">
+              All fields required
+            </p>
             <p className="preset-6 text-neutral-400 md:hidden">All required</p>
           </header>
 
-          <form
-            className="mt-6"
-            onSubmit={(event) => event.preventDefault()}
-          >
+          <form className="mt-6" onSubmit={(event) => event.preventDefault()}>
             <div className="space-y-5">
               <div>
-                <label htmlFor="callsign" className="preset-6 flex items-center gap-2 text-neutral-300">
+                <label
+                  htmlFor="callsign"
+                  className="preset-6 flex items-center gap-2 text-neutral-300"
+                >
                   <span className="text-lime-500">&gt;</span>
                   Callsign
                 </label>
@@ -121,7 +134,10 @@ function App() {
               </div>
 
               <div>
-                <label htmlFor="email" className="preset-6 flex items-center gap-2 text-neutral-300">
+                <label
+                  htmlFor="email"
+                  className="preset-6 flex items-center gap-2 text-neutral-300"
+                >
                   <span className="text-lime-500">&gt;</span>
                   Email
                 </label>
@@ -136,7 +152,10 @@ function App() {
               </div>
 
               <div>
-                <label htmlFor="password" className="preset-6 flex items-center gap-2 text-neutral-300">
+                <label
+                  htmlFor="password"
+                  className="preset-6 flex items-center gap-2 text-neutral-300"
+                >
                   <span className="text-lime-500">&gt;</span>
                   Password
                 </label>
@@ -151,9 +170,14 @@ function App() {
                   <button
                     type="button"
                     aria-label="Show password"
-                    className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 p-1"
+                    className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 p-2 cursor-pointer focus-visible:border-2 focus-visible:border-lime-500 focus-visible:outline-none"
                   >
-                    <img src={eyeIcon} alt="" aria-hidden="true" className="size-5" />
+                    <img
+                      src={eyeIcon}
+                      alt=""
+                      aria-hidden="true"
+                      className="size-5"
+                    />
                   </button>
                 </div>
                 <div aria-hidden="true" className="mt-2 grid grid-cols-4 gap-1">
@@ -162,11 +186,16 @@ function App() {
                   <span className="h-1 bg-neutral-700" />
                   <span className="h-1 bg-neutral-700" />
                 </div>
-                <p className="preset-7 mt-2 text-neutral-400">At least 8 characters</p>
+                <p className="preset-7 mt-2 text-neutral-400">
+                  At least 8 characters
+                </p>
               </div>
 
               <div>
-                <label htmlFor="confirm-password" className="preset-6 flex items-center gap-2 text-neutral-300">
+                <label
+                  htmlFor="confirm-password"
+                  className="preset-6 flex items-center gap-2 text-neutral-300"
+                >
                   <span className="text-lime-500">&gt;</span>
                   Confirm password
                 </label>
@@ -181,9 +210,14 @@ function App() {
                   <button
                     type="button"
                     aria-label="Show confirm password"
-                    className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 p-1"
+                    className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 p-2 cursor-pointer focus-visible:border-2 focus-visible:border-lime-500 focus-visible:outline-none"
                   >
-                    <img src={eyeIcon} alt="" aria-hidden="true" className="size-5" />
+                    <img
+                      src={eyeIcon}
+                      alt=""
+                      aria-hidden="true"
+                      className="size-5"
+                    />
                   </button>
                 </div>
               </div>
@@ -194,15 +228,21 @@ function App() {
                 id="terms"
                 name="terms"
                 type="checkbox"
-                className="mt-0.5 size-6 shrink-0 appearance-none border border-neutral-600 bg-navy-950"
+                className="mt-0.5 size-6 shrink-0 appearance-none border border-neutral-600 bg-navy-950 cursor-pointer focus-visible:outline-2 focus-visible:outline-lime-500 focus-visible:outline-offset-3"
               />
               <label htmlFor="terms" className="preset-5 text-neutral-300">
-                I accept the{' '}
-                <a href="#terms" className="text-lime-500 underline decoration-dotted underline-offset-4">
+                I accept the{" "}
+                <a
+                  href="#terms"
+                  className="text-lime-500 p-1 focus:border-2 focus:border-lime-500 focus:outline-none"
+                >
                   Terms
-                </a>{' '}
-                and{' '}
-                <a href="#privacy" className="text-lime-500 underline decoration-dotted underline-offset-4">
+                </a>{" "}
+                and{" "}
+                <a
+                  href="#privacy"
+                  className="text-lime-500 p-1 focus:border-2 focus:border-lime-500 focus:outline-none"
+                >
                   Privacy Policy
                 </a>
                 .
@@ -211,22 +251,25 @@ function App() {
 
             <button
               type="submit"
-              className="preset-5-bold mt-6 flex h-12 w-full items-center justify-center bg-lime-500 text-navy-950"
+              className="preset-5-bold mt-6 flex h-12 w-full items-center justify-center bg-lime-500 text-navy-950 focus-visible:border-3 focus-visible:border-neutral-900/80  focus-visible:outline-2 focus-visible:outline-lime-500 hover:cursor-pointer hover:bg-neutral-50 transition-colors"
             >
               Initialize account
             </button>
           </form>
 
           <p className="preset-5 mt-6 text-center text-neutral-300">
-            Already an operator?{' '}
-            <a href="#login" className="text-lime-500 underline decoration-dotted underline-offset-4">
+            Already an operator?{" "}
+            <a
+              href="#login"
+              className="text-lime-500 p-1 focus:border-2 focus:border-lime-500 focus:outline-none"
+            >
               Log in
             </a>
           </p>
         </section>
       </div>
     </main>
-  )
+  );
 }
 
-export default App
+export default App;
