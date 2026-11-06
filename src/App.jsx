@@ -1,11 +1,231 @@
-
+import logo from './assests/images/logo.svg'
+import patternBackdrop from './assests/images/pattern-backdrop.svg'
+import eyeIcon from './assests/images/icon-eye.svg'
 import './App.css'
+
+const operatorRows = [
+  ['Callsign', 'Pending'],
+  ['Email', 'Pending'],
+  ['Password', 'Pending'],
+  ['Confirm', 'Pending'],
+  ['Terms', 'Required'],
+]
+
+const inputClasses =
+  'mt-2 h-12 w-full border border-neutral-600 bg-navy-950 px-4 font-jetbrains text-inputs text-neutral-100 placeholder:text-neutral-500 focus-visible:border-lime-500 focus-visible:outline-none'
 
 function App() {
   return (
-    <div className='h-screen bg-neutral-950'>
-      <div className='preset-1 text-neutral-50'>Join the<br></br>nexus</div>
-    </div>
+    <main className="relative isolate min-h-screen overflow-hidden bg-neutral-950 p-4 text-neutral-50 md:p-10">
+      <img
+        src={patternBackdrop}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-[30rem] top-1/2 z-0 hidden size-[60rem] -translate-y-1/2 lg:block"
+      />
+
+      <div className="relative z-10 mx-auto grid min-h-screen w-full max-w-[1120px] content-start gap-7 py-8 lg:grid-cols-[minmax(0,1fr)_480px] lg:items-center lg:gap-8 lg:py-0 xl:gap-20">
+        <section aria-label="NEONCORE sign-up introduction" className="min-w-0 lg:my-auto">
+          <div className="flex items-center justify-between lg:block">
+            <img src={logo} alt="NEONCORE" className="h-8 w-[169px]" />
+            <p className="preset-6 text-neutral-400 lg:hidden">0/5 ready</p>
+          </div>
+
+          <div className="mt-8 flex items-start gap-3 lg:mt-24 lg:gap-5">
+            <span
+              aria-hidden="true"
+              className="mt-1 flex shrink-0 gap-2 pt-1 md:gap-3 lg:mt-3"
+            >
+              <span className="h-8 w-[5px] rotate-[42deg] bg-lime-500 md:h-10 md:w-[6px] lg:h-14 lg:w-2" />
+              <span className="h-8 w-[5px] rotate-[42deg] bg-lime-500 md:h-10 md:w-[6px] lg:h-14 lg:w-2" />
+            </span>
+            <h1 className="preset-1 text-neutral-50">
+              Join the
+              <br />
+              nexus
+            </h1>
+          </div>
+
+          <p className="preset-6 mt-3 text-neutral-300 lg:mt-6">
+            Initialize your NEONCORE identity
+          </p>
+
+          <section aria-label="Operator ID status" className="mt-7 border-t border-neutral-700 lg:mt-16">
+            <div className="flex items-center justify-between pt-4 lg:pt-6">
+              <h2 className="preset-6 text-neutral-400">Operator ID</h2>
+              <p className="preset-6 hidden text-neutral-400 lg:block">0/5 ready</p>
+              <p className="preset-6 text-neutral-400 lg:hidden">Unassigned</p>
+            </div>
+
+            <p className="preset-2 mt-2 hidden text-neutral-300 uppercase lg:block">
+              Unassigned
+            </p>
+
+            <ul className="mt-5 hidden space-y-2 lg:block">
+              {operatorRows.map(([label, status]) => (
+                <li
+                  key={label}
+                  className="preset-6 flex items-center gap-3 text-neutral-400"
+                >
+                  <span>{label}</span>
+                  <span aria-hidden="true" className="mb-1 flex-1 border-b border-dotted border-neutral-700" />
+                  <span>{status}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </section>
+
+        <section
+          aria-labelledby="signup-title"
+          className="relative border border-neutral-700 bg-neutral-900/90 px-5 py-8 md:px-10 md:py-10 lg:py-11"
+        >
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -left-px -top-px h-6 w-6 border-l-2 border-t-2 border-lime-500"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-px -right-px h-6 w-6 border-b-2 border-r-2 border-lime-500"
+          />
+
+          <header className="flex items-center justify-between border-b border-neutral-700 pb-4">
+            <h2 id="signup-title" className="preset-6 text-neutral-100">
+              New operator
+            </h2>
+            <p className="preset-6 hidden text-neutral-400 md:block">All fields required</p>
+            <p className="preset-6 text-neutral-400 md:hidden">All required</p>
+          </header>
+
+          <form
+            className="mt-6"
+            onSubmit={(event) => event.preventDefault()}
+          >
+            <div className="space-y-5">
+              <div>
+                <label htmlFor="callsign" className="preset-6 flex items-center gap-2 text-neutral-300">
+                  <span className="text-lime-500">&gt;</span>
+                  Callsign
+                </label>
+                <input
+                  id="callsign"
+                  name="callsign"
+                  type="text"
+                  placeholder="e.g. Vortex_07"
+                  autoComplete="nickname"
+                  className={inputClasses}
+                />
+                <p className="preset-7 mt-2 text-neutral-400">
+                  3–20 characters: letters, numbers, _ or -
+                </p>
+              </div>
+
+              <div>
+                <label htmlFor="email" className="preset-6 flex items-center gap-2 text-neutral-300">
+                  <span className="text-lime-500">&gt;</span>
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  className={inputClasses}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="password" className="preset-6 flex items-center gap-2 text-neutral-300">
+                  <span className="text-lime-500">&gt;</span>
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                    className={`${inputClasses} pr-12`}
+                  />
+                  <button
+                    type="button"
+                    aria-label="Show password"
+                    className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 p-1"
+                  >
+                    <img src={eyeIcon} alt="" aria-hidden="true" className="size-5" />
+                  </button>
+                </div>
+                <div aria-hidden="true" className="mt-2 grid grid-cols-4 gap-1">
+                  <span className="h-1 bg-neutral-700" />
+                  <span className="h-1 bg-neutral-700" />
+                  <span className="h-1 bg-neutral-700" />
+                  <span className="h-1 bg-neutral-700" />
+                </div>
+                <p className="preset-7 mt-2 text-neutral-400">At least 8 characters</p>
+              </div>
+
+              <div>
+                <label htmlFor="confirm-password" className="preset-6 flex items-center gap-2 text-neutral-300">
+                  <span className="text-lime-500">&gt;</span>
+                  Confirm password
+                </label>
+                <div className="relative">
+                  <input
+                    id="confirm-password"
+                    name="confirm-password"
+                    type="password"
+                    autoComplete="new-password"
+                    className={`${inputClasses} pr-12`}
+                  />
+                  <button
+                    type="button"
+                    aria-label="Show confirm password"
+                    className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 p-1"
+                  >
+                    <img src={eyeIcon} alt="" aria-hidden="true" className="size-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex items-start gap-3">
+              <input
+                id="terms"
+                name="terms"
+                type="checkbox"
+                className="mt-0.5 size-6 shrink-0 appearance-none border border-neutral-600 bg-navy-950"
+              />
+              <label htmlFor="terms" className="preset-5 text-neutral-300">
+                I accept the{' '}
+                <a href="#terms" className="text-lime-500 underline decoration-dotted underline-offset-4">
+                  Terms
+                </a>{' '}
+                and{' '}
+                <a href="#privacy" className="text-lime-500 underline decoration-dotted underline-offset-4">
+                  Privacy Policy
+                </a>
+                .
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              className="preset-5-bold mt-6 flex h-12 w-full items-center justify-center bg-lime-500 text-navy-950"
+            >
+              Initialize account
+            </button>
+          </form>
+
+          <p className="preset-5 mt-6 text-center text-neutral-300">
+            Already an operator?{' '}
+            <a href="#login" className="text-lime-500 underline decoration-dotted underline-offset-4">
+              Log in
+            </a>
+          </p>
+        </section>
+      </div>
+    </main>
   )
 }
 
