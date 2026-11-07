@@ -2,6 +2,7 @@ import logo from "./assests/images/logo.svg";
 import patternBackdrop from "./assests/images/pattern-backdrop.svg";
 import eyeIcon from "./assests/images/icon-eye.svg";
 import "./App.css";
+import { useState } from "react";
 
 const operatorRows = [
   ["Callsign", "Pending"],
@@ -15,6 +16,8 @@ const inputClasses =
   "mt-2 min-h-13 w-full border border-neutral-600 bg-navy-950 px-4 py-3 font-jetbrains text-inputs text-neutral-100 placeholder:text-neutral-500 focus-visible:border-lime-500 focus-visible:outline-2 focus-visible:outline-lime-500 focus-visible:outline-offset-3 hover:border-neutral-50 transition-color";
 
 function App() {
+  const [name, setName] = useState("");
+  const [error, setError] = useState("bbb");
   return (
     <main className="relative isolate min-h-screen overflow-hidden bg-neutral-950 p-4 text-neutral-50 md:p-10">
       <img
@@ -128,9 +131,13 @@ function App() {
                   autoComplete="nickname"
                   className={inputClasses}
                 />
-                <p className="preset-7 mt-2 text-neutral-400">
-                  3–20 characters: letters, numbers, _ or -
-                </p>
+                {error ? (
+                  <p className="preset-7 mt-2 text-red-400"></p>
+                ) : (
+                  <p className="preset-7 mt-2 text-neutral-400">
+                    3–20 characters: letters, numbers, _ or -
+                  </p>
+                )}
               </div>
 
               <div>
