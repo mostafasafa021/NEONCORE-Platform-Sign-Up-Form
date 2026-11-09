@@ -70,20 +70,12 @@ function App() {
 
   function validateForm(e) {
     e.preventDefault();
-    if (formData.callsign.length < 3) {
-      setError("callsign", true, "Use at least 3 characters");
-    } else {
-      setError("callsign", false, "");
-    }
-
-    if (formData.callsign.length > 20) {
-      setError("callsign", true, "Use 20 characters or fewer");
-    } else {
-      setError("callsign", false, "");
-    }
-
     if (/[^a-zA-Z0-9_-]/.test(formData.callsign)) {
       setError("callsign", true, "Use letters, numbers, _ or - only");
+    } else if (formData.callsign.length < 3) {
+      setError("callsign", true, "Use at least 3 characters");
+    } else if (formData.callsign.length > 20) {
+      setError("callsign", true, "Use 20 characters or fewer");
     } else {
       setError("callsign", false, "");
     }
@@ -112,9 +104,9 @@ function App() {
     }
 
     if (!formData.terms) {
-      setError("terms",true,"Accept the terms to continue")
+      setError("terms", true, "Accept the terms to continue");
     } else {
-      setError("terms",false,"")
+      setError("terms", false, "");
     }
   }
 
