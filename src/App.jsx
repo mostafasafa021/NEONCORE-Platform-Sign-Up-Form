@@ -1,6 +1,7 @@
 import logo from "./assests/images/logo.svg";
 import patternBackdrop from "./assests/images/pattern-backdrop.svg";
 import eyeIcon from "./assests/images/icon-eye.svg";
+import alertIcon from "./assests/images/icon-alert.svg";
 import "./App.css";
 import { useState } from "react";
 
@@ -16,8 +17,107 @@ const inputClasses =
   "mt-2 min-h-13 w-full border border-neutral-600 bg-navy-950 px-4 py-3 font-jetbrains text-inputs text-neutral-100 placeholder:text-neutral-500 focus-visible:border-lime-500 focus-visible:outline-2 focus-visible:outline-lime-500 focus-visible:outline-offset-3 hover:border-neutral-50 transition-color";
 
 function App() {
-  const [name, setName] = useState("");
-  const [error, setError] = useState("bbb");
+  const [formData, setFormData] = useState({
+    callsign: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    terms: false,
+  });
+  console.log(formData);
+  const [errors, setErrors] = useState({
+    callsign: {
+      isError: false,
+      message: "",
+    },
+    email: {
+      isError: false,
+      message: "",
+    },
+    password: {
+      isError: false,
+      message: "",
+    },
+    confirmPassword: {
+      isError: false,
+      message: "",
+    },
+    terms: {
+      isError: false,
+      message: "",
+    },
+  });
+
+  function handleChange(event) {
+    const { name, type, value, checked } = event.target;
+    console.log(event.target);
+    setFormData((previousFormData) => ({
+      ...previousFormData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  }
+
+  function setError(field, isError, message) {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [field]: {
+        ...[field],
+        isError,
+        message,
+      },
+    }));
+  }
+
+  function validateForm(e) {
+    e.preventDefault();
+    if (formData.callsign.length < 3) {
+      setError("callsign", true, "Use at least 3 characters");
+    } else {
+      setError("callsign", false, "");
+    }
+
+    if (formData.callsign.length > 20) {
+      setError("callsign", true, "Use 20 characters or fewer");
+    } else {
+      setError("callsign", false, "");
+    }
+
+    if (/[^a-zA-Z0-9_-]/.test(formData.callsign)) {
+      setError("callsign", true, "Use letters, numbers, _ or - only");
+    } else {
+      setError("callsign", false, "");
+    }
+
+    if (!/\w+@\w+.(com|net)/.test(formData.email)) {
+      setError("email", true, "Enter a valid email, like you@example.com");
+    } else {
+      setError("email", false, "");
+    }
+
+    if (formData.password.length === 0) {
+      setError("password", true, "Enter a password");
+    } else if (formData.password.length < 8) {
+      setError("password", true, "Use at least 8 characters");
+    } else {
+      setError("password", false, "");
+    }
+
+    if (
+      formData.password !== formData.confirmPassword &&
+      formData.password.length >= 8
+    ) {
+      setError("confirmPassword", true, "Passwords don't match");
+    } else {
+      setError("confirmPassword", false, "");
+    }
+
+    if (!formData.terms) {
+      setError("terms",true,"Accept the terms to continue")
+    } else {
+      setError("terms",false,"")
+    }
+  }
+
   return (
     <main className="relative isolate min-h-screen overflow-hidden bg-neutral-950 p-4 text-neutral-50 md:p-10">
       <img
@@ -113,7 +213,7 @@ function App() {
             <p className="preset-6 text-neutral-400 md:hidden">All required</p>
           </header>
 
-          <form className="mt-6" onSubmit={(event) => event.preventDefault()}>
+          <form className="mt-6" onSubmit={validateForm} noValidate>
             <div className="space-y-5">
               <div>
                 <label
@@ -129,12 +229,22 @@ function App() {
                   type="text"
                   placeholder="e.g. Vortex_07"
                   autoComplete="nickname"
+                  value={formData.callsign}
+                  onChange={handleChange}
                   className={inputClasses}
                 />
-                {error ? (
-                  <p className="preset-7 mt-2 text-red-400"></p>
+                {errors.callsign.isError ? (
+                  <p className="preset-7 mt-3 text-red-400 flex items-center gap-3">
+                    <img
+                      src={alertIcon}
+                      alt=""
+                      aria-hidden="true"
+                      className="inline-block"
+                    />{" "}
+                    {errors.callsign.message}
+                  </p>
                 ) : (
-                  <p className="preset-7 mt-2 text-neutral-400">
+                  <p className="preset-7 mt-3 text-neutral-400">
                     3–20 characters: letters, numbers, _ or -
                   </p>
                 )}
@@ -154,8 +264,21 @@ function App() {
                   type="email"
                   placeholder="you@example.com"
                   autoComplete="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   className={inputClasses}
                 />
+                {errors.email.isError && (
+                  <p className="preset-7 mt-3 text-red-400 flex items-center gap-3">
+                    <img
+                      src={alertIcon}
+                      alt=""
+                      aria-hidden="true"
+                      className="inline-block"
+                    />{" "}
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -172,6 +295,8 @@ function App() {
                     name="password"
                     type="password"
                     autoComplete="new-password"
+                    value={formData.password}
+                    onChange={handleChange}
                     className={`${inputClasses} pr-12`}
                   />
                   <button
@@ -193,14 +318,26 @@ function App() {
                   <span className="h-1 bg-neutral-700" />
                   <span className="h-1 bg-neutral-700" />
                 </div>
-                <p className="preset-7 mt-2 text-neutral-400">
-                  At least 8 characters
-                </p>
+                {errors.password.isError ? (
+                  <p className="preset-7 mt-2 text-red-400 flex items-center gap-3">
+                    <img
+                      src={alertIcon}
+                      alt=""
+                      aria-hidden="true"
+                      className="inline-block"
+                    />{" "}
+                    {errors.password.message}
+                  </p>
+                ) : (
+                  <p className="preset-7 mt-2 text-neutral-400">
+                    At least 8 characters
+                  </p>
+                )}
               </div>
 
               <div>
                 <label
-                  htmlFor="confirm-password"
+                  htmlFor="confirmPassword"
                   className="preset-6 flex items-center gap-2 text-neutral-300"
                 >
                   <span className="text-lime-500">&gt;</span>
@@ -208,10 +345,12 @@ function App() {
                 </label>
                 <div className="relative">
                   <input
-                    id="confirm-password"
-                    name="confirm-password"
+                    id="confirmPassword"
+                    name="confirmPassword"
                     type="password"
                     autoComplete="new-password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
                     className={`${inputClasses} pr-12`}
                   />
                   <button
@@ -227,6 +366,17 @@ function App() {
                     />
                   </button>
                 </div>
+                {errors.confirmPassword.isError && (
+                  <p className="preset-7 mt-3 text-red-400 flex items-center gap-3">
+                    <img
+                      src={alertIcon}
+                      alt=""
+                      aria-hidden="true"
+                      className="inline-block"
+                    />{" "}
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -235,7 +385,9 @@ function App() {
                 id="terms"
                 name="terms"
                 type="checkbox"
-                className="mt-0.5 size-6 shrink-0 appearance-none border border-neutral-600 bg-navy-950 cursor-pointer focus-visible:outline-2 focus-visible:outline-lime-500 focus-visible:outline-offset-3"
+                checked={formData.terms}
+                onChange={handleChange}
+                className="mt-0.5 size-6 shrink-0 appearance-none border border-neutral-600 bg-navy-950 cursor-pointer focus-visible:outline-2 focus-visible:outline-lime-500 focus-visible:outline-offset-3 checked:bg-lime-500 checked:border-none"
               />
               <label htmlFor="terms" className="preset-5 text-neutral-300">
                 I accept the{" "}
@@ -255,6 +407,17 @@ function App() {
                 .
               </label>
             </div>
+            {errors.terms.isError && (
+              <p className="preset-7 mt-3 text-red-400 flex items-center gap-3">
+                <img
+                  src={alertIcon}
+                  alt=""
+                  aria-hidden="true"
+                  className="inline-block"
+                />{" "}
+                {errors.terms.message}
+              </p>
+            )}
 
             <button
               type="submit"
