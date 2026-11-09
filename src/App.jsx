@@ -2,6 +2,7 @@ import logo from "./assests/images/logo.svg";
 import patternBackdrop from "./assests/images/pattern-backdrop.svg";
 import eyeIcon from "./assests/images/icon-eye.svg";
 import alertIcon from "./assests/images/icon-alert.svg";
+import eyeIconOff from "./assests/images/icon-eye-off.svg";
 import "./App.css";
 import { useState } from "react";
 
@@ -24,7 +25,7 @@ function App() {
     confirmPassword: "",
     terms: false,
   });
-  console.log(formData);
+
   const [errors, setErrors] = useState({
     callsign: {
       isError: false,
@@ -47,6 +48,9 @@ function App() {
       message: "",
     },
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   function handleChange(event) {
     const { name, type, value, checked } = event.target;
@@ -285,7 +289,7 @@ function App() {
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
                     value={formData.password}
                     onChange={handleChange}
@@ -294,14 +298,24 @@ function App() {
                   <button
                     type="button"
                     aria-label="Show password"
+                    onClick={() => setShowPassword((prev) => !prev)}
                     className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 p-2 cursor-pointer focus-visible:border-2 focus-visible:border-lime-500 focus-visible:outline-none"
                   >
-                    <img
-                      src={eyeIcon}
-                      alt=""
-                      aria-hidden="true"
-                      className="size-5"
-                    />
+                    {showPassword ? (
+                      <img
+                        src={eyeIconOff}
+                        alt=""
+                        aria-hidden="true"
+                        className="size-5"
+                      />
+                    ) : (
+                      <img
+                        src={eyeIcon}
+                        alt=""
+                        aria-hidden="true"
+                        className="size-5"
+                      />
+                    )}
                   </button>
                 </div>
                 <div aria-hidden="true" className="mt-2 grid grid-cols-4 gap-1">
@@ -339,7 +353,7 @@ function App() {
                   <input
                     id="confirmPassword"
                     name="confirmPassword"
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     autoComplete="new-password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
@@ -348,14 +362,26 @@ function App() {
                   <button
                     type="button"
                     aria-label="Show confirm password"
+                    onClick={() =>
+                      setShowConfirmPassword((prev) => !prev)
+                    }
                     className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 p-2 cursor-pointer focus-visible:border-2 focus-visible:border-lime-500 focus-visible:outline-none"
                   >
-                    <img
-                      src={eyeIcon}
-                      alt=""
-                      aria-hidden="true"
-                      className="size-5"
-                    />
+                    {showConfirmPassword ? (
+                      <img
+                        src={eyeIconOff}
+                        alt=""
+                        aria-hidden="true"
+                        className="size-5"
+                      />
+                    ) : (
+                      <img
+                        src={eyeIcon}
+                        alt=""
+                        aria-hidden="true"
+                        className="size-5"
+                      />
+                    )}
                   </button>
                 </div>
                 {errors.confirmPassword.isError && (
