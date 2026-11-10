@@ -3,6 +3,7 @@ import patternBackdrop from "./assests/images/pattern-backdrop.svg";
 import eyeIcon from "./assests/images/icon-eye.svg";
 import alertIcon from "./assests/images/icon-alert.svg";
 import eyeIconOff from "./assests/images/icon-eye-off.svg";
+import tickIcon from "./assests/images/icon-tick-16.svg";
 import "./App.css";
 import { useState } from "react";
 
@@ -399,14 +400,24 @@ function App() {
             </div>
 
             <div className="mt-6 flex items-start gap-3">
-              <input
-                id="terms"
-                name="terms"
-                type="checkbox"
-                checked={formData.terms}
-                onChange={handleChange}
-                className="mt-0.5 size-6 shrink-0 appearance-none border border-neutral-600 bg-navy-950 cursor-pointer focus-visible:outline-2 focus-visible:outline-lime-500 focus-visible:outline-offset-3 checked:bg-lime-500 checked:border-none"
-              />
+              <div className="relative mt-0.5 size-6 shrink-0">
+                <input
+                  id="terms"
+                  name="terms"
+                  type="checkbox"
+                  checked={formData.terms}
+                  onChange={handleChange}
+                  className="size-full appearance-none border border-neutral-600 bg-navy-950 cursor-pointer focus-visible:outline-2 focus-visible:outline-lime-500 focus-visible:outline-offset-3 checked:bg-lime-500 checked:border-none"
+                />
+                {formData.terms && (
+                  <img
+                    src={tickIcon}
+                    alt=""
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2"
+                  />
+                )}
+              </div>
               <label htmlFor="terms" className="preset-5 text-neutral-300">
                 I accept the{" "}
                 <a
