@@ -1,9 +1,9 @@
-import logo from "./assests/images/logo.svg";
-import patternBackdrop from "./assests/images/pattern-backdrop.svg";
-import eyeIcon from "./assests/images/icon-eye.svg";
-import alertIcon from "./assests/images/icon-alert.svg";
-import eyeIconOff from "./assests/images/icon-eye-off.svg";
-import tickIcon from "./assests/images/icon-tick-16.svg";
+import logo from "./assets/images/logo.svg";
+import patternBackdrop from "./assets/images/pattern-backdrop.svg";
+import eyeIcon from "./assets/images/icon-eye.svg";
+import alertIcon from "./assets/images/icon-alert.svg";
+import eyeIconOff from "./assets/images/icon-eye-off.svg";
+import tickIcon from "./assets/images/icon-tick-16.svg";
 import "./App.css";
 import { useState } from "react";
 
