@@ -4,8 +4,9 @@ import eyeIcon from "./assets/images/icon-eye.svg";
 import alertIcon from "./assets/images/icon-alert.svg";
 import eyeIconOff from "./assets/images/icon-eye-off.svg";
 import tickIcon from "./assets/images/icon-tick-16.svg";
+import successTickIcon from "./assets/images/icon-tick-20.svg";
 import "./App.css";
-import { useState } from "react";
+import { use, useState } from "react";
 
 const operatorRows = [
   ["Callsign", "Pending"],
@@ -14,6 +15,13 @@ const operatorRows = [
   ["Confirm", "Pending"],
   ["Terms", "Required"],
 ];
+
+const passwordStrengthLevels = {
+  Weak: { bars: 1, color: "bg-red-400", textColor: "text-red-400" },
+  Fair: { bars: 2, color: "bg-amber-400", textColor: "text-amber-400" },
+  Good: { bars: 3, color: "bg-lime-500", textColor: "text-lime-500" },
+  Strong: { bars: 4, color: "bg-lime-700", textColor: "text-lime-700" },
+};
 
 const inputClasses =
   "mt-2 min-h-13 w-full border border-neutral-600 bg-navy-950 px-4 py-3 font-jetbrains text-inputs text-neutral-100 placeholder:text-neutral-500 focus-visible:border-lime-500 focus-visible:outline-2 focus-visible:outline-lime-500 focus-visible:outline-offset-3 hover:border-neutral-50 transition-color";
@@ -52,6 +60,7 @@ function App() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(null);
 
   function handleChange(event) {
     const { name, type, value, checked } = event.target;
@@ -114,6 +123,34 @@ function App() {
       setError("terms", false, "");
     }
   }
+
+  function checkPasswordStrength(password) {
+    const scoreLabels = ["Weak", "Fair", "Good", "Strong"];
+    let score = 0;
+    const passMinimun = password.length >= 8;
+    if (password.length >= 16) {
+      score++;
+    }
+
+    if (password.length >= 20) {
+      score++;
+    }
+
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password) && passMinimun) {
+      score++;
+    }
+
+    if (/[0-9]/.test(password) && passMinimun) {
+      score++;
+    }
+
+    if (/[^a-zA-Z0-9 ]/.test(password) && passMinimun) {
+      score++;
+    }
+    return scoreLabels[score];
+  }
+
+  const strength = passwordStrengthLevels[passwordStrength];
 
   return (
     <main className="relative isolate min-h-screen overflow-hidden bg-neutral-950 p-4 text-neutral-50 md:p-10">
@@ -220,16 +257,18 @@ function App() {
                   <span className="text-lime-500">&gt;</span>
                   Callsign
                 </label>
-                <input
-                  id="callsign"
-                  name="callsign"
-                  type="text"
-                  placeholder="e.g. Vortex_07"
-                  autoComplete="nickname"
-                  value={formData.callsign}
-                  onChange={handleChange}
-                  className={inputClasses}
-                />
+                <div className="relative">
+                  <input
+                    id="callsign"
+                    name="callsign"
+                    type="text"
+                    placeholder="e.g. Vortex_07"
+                    autoComplete="nickname"
+                    value={formData.callsign}
+                    onChange={handleChange}
+                    className={`${inputClasses} pr-12`}
+                  />
+                </div>
                 {errors.callsign.isError ? (
                   <p className="preset-7 mt-3 text-red-400 flex items-center gap-3">
                     <img
@@ -255,16 +294,18 @@ function App() {
                   <span className="text-lime-500">&gt;</span>
                   Email
                 </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  autoComplete="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={inputClasses}
-                />
+                <div className="relative">
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={`${inputClasses} pr-12`}
+                  />
+                </div>
                 {errors.email.isError && (
                   <p className="preset-7 mt-3 text-red-400 flex items-center gap-3">
                     <img
@@ -293,8 +334,16 @@ function App() {
                     type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
                     value={formData.password}
-                    onChange={handleChange}
-                    className={`${inputClasses} pr-12`}
+                    onChange={(event) => {
+                      handleChange(event);
+                      setPasswordStrength(
+                        checkPasswordStrength(event.target.value),
+                      );
+                      if (event.target.value.length < 1) {
+                        setPasswordStrength(null);
+                      }
+                    }}
+                    className={`${inputClasses} pr-20`}
                   />
                   <button
                     type="button"
@@ -319,14 +368,24 @@ function App() {
                     )}
                   </button>
                 </div>
-                <div aria-hidden="true" className="mt-2 grid grid-cols-4 gap-1">
-                  <span className="h-1 bg-neutral-700" />
-                  <span className="h-1 bg-neutral-700" />
-                  <span className="h-1 bg-neutral-700" />
-                  <span className="h-1 bg-neutral-700" />
+                <div className="relative mt-2 grid grid-cols-4 gap-1">
+                  {Array.from({ length: 4 }, (_, index) => (
+                    <span
+                      key={index}
+                      aria-hidden="true"
+                      className={`h-1 ${strength && index < strength.bars ? strength.color : "bg-neutral-700"}`}
+                    />
+                  ))}
+                  {strength && (
+                    <span
+                      className={`preset-6 absolute -bottom-6 right-0 ${strength.textColor}`}
+                    >
+                      {passwordStrength}
+                    </span>
+                  )}
                 </div>
                 {errors.password.isError ? (
-                  <p className="preset-7 mt-2 text-red-400 flex items-center gap-3">
+                  <p className="preset-7 mt-2 flex items-center gap-3 pr-16 text-red-400">
                     <img
                       src={alertIcon}
                       alt=""
@@ -358,14 +417,12 @@ function App() {
                     autoComplete="new-password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className={`${inputClasses} pr-12`}
+                    className={`${inputClasses} pr-20`}
                   />
                   <button
                     type="button"
                     aria-label="Show confirm password"
-                    onClick={() =>
-                      setShowConfirmPassword((prev) => !prev)
-                    }
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
                     className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 p-2 cursor-pointer focus-visible:border-2 focus-visible:border-lime-500 focus-visible:outline-none"
                   >
                     {showConfirmPassword ? (
