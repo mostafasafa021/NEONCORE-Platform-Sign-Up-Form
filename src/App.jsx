@@ -6,7 +6,7 @@ import eyeIconOff from "./assets/images/icon-eye-off.svg";
 import tickIcon from "./assets/images/icon-tick-16.svg";
 import successTickIcon from "./assets/images/icon-tick-20.svg";
 import "./App.css";
-import { use, useState } from "react";
+import { useState } from "react";
 
 const operatorRows = [
   ["Callsign", "Pending"],
@@ -28,100 +28,114 @@ const inputClasses =
 
 function App() {
   const [formData, setFormData] = useState({
-    callsign: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    callsign: {
+      value: "",
+      neverFilled: true,
+      neverChecked: true,
+    },
+    email: { value: "", neverFilled: true, neverChecked: true },
+    password: { value: "", neverFilled: true, neverChecked: true },
+    confirmPassword: { value: "", neverFilled: true, neverChecked: true },
     terms: false,
   });
 
-  const [errors, setErrors] = useState({
-    callsign: {
-      isError: false,
-      message: "",
-    },
-    email: {
-      isError: false,
-      message: "",
-    },
-    password: {
-      isError: false,
-      message: "",
-    },
-    confirmPassword: {
-      isError: false,
-      message: "",
-    },
-    terms: {
-      isError: false,
-      message: "",
-    },
-  });
+  const [errors, setErrors] = useState({});
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState(null);
+  const passwordStrength = formData.password.value
+    ? checkPasswordStrength(formData.password)
+    : null;
 
   function handleChange(event) {
     const { name, type, value, checked } = event.target;
-    console.log(event.target);
-    setFormData((previousFormData) => ({
-      ...previousFormData,
-      [name]: type === "checkbox" ? checked : value,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]:
+        type === "checkbox"
+          ? checked
+          : { ...prevFormData[name], value, neverFilled: false },
     }));
   }
 
-  function setError(field, isError, message) {
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [field]: {
-        ...[field],
-        isError,
-        message,
-      },
-    }));
+  function validateCallsign(callsign) {
+    const trimedCallsign = callsign.trim();
+    if (trimedCallsign.length === 0) {
+      return "Enter a callsign";
+    } else if (/[^a-zA-Z0-9_-]/.test(trimedCallsign)) {
+      return "Use letters, numbers, _ or - only";
+    } else if (trimedCallsign.length < 3) {
+      return "Use at least 3 characters";
+    } else if (trimedCallsign.length > 20) {
+      return "Use 20 characters or fewer";
+    }
+    return "";
   }
 
-  function validateForm(e) {
+  function validateEmail(email) {
+    if (email.length === 0) {
+      return "Enter your email";
+    } else if (!/\w+@\w+\.\w+/.test(email)) {
+      return "Enter a valid email, like you@example.com";
+    } else {
+      return "";
+    }
+  }
+
+  function validatePassword(password) {
+    if (password.length === 0) {
+      return "Enter a password";
+    } else if (password.length < 8) {
+      return "Use at least 8 characters";
+    }
+    return "";
+  }
+
+  function validateConfirmPassword(password, confirmPassword) {
+    if (confirmPassword.length === 0) {
+      return "Confirm your password";
+    } else if (password !== confirmPassword) {
+      return "Passwords don't match";
+    }
+    return "";
+  }
+
+  function validateTerms(terms) {
+    if (!terms) {
+      return "Accept the terms to continue";
+    } else {
+      return "";
+    }
+  }
+
+  function validateForm(callsign, email, password, confirmPassword, terms) {
+    const error = {};
+    error.callsign = validateCallsign(callsign);
+    error.email = validateEmail(email);
+    error.password = validatePassword(password);
+    error.confirmPassword = validateConfirmPassword(password, confirmPassword);
+    error.terms = validateTerms(terms);
+    return error;
+  }
+
+  function handleSubmit(e) {
     e.preventDefault();
-    if (/[^a-zA-Z0-9_-]/.test(formData.callsign)) {
-      setError("callsign", true, "Use letters, numbers, _ or - only");
-    } else if (formData.callsign.length < 3) {
-      setError("callsign", true, "Use at least 3 characters");
-    } else if (formData.callsign.length > 20) {
-      setError("callsign", true, "Use 20 characters or fewer");
-    } else {
-      setError("callsign", false, "");
-    }
-
-    if (!/\w+@\w+.(com|net)/.test(formData.email)) {
-      setError("email", true, "Enter a valid email, like you@example.com");
-    } else {
-      setError("email", false, "");
-    }
-
-    if (formData.password.length === 0) {
-      setError("password", true, "Enter a password");
-    } else if (formData.password.length < 8) {
-      setError("password", true, "Use at least 8 characters");
-    } else {
-      setError("password", false, "");
-    }
-
-    if (
-      formData.password !== formData.confirmPassword &&
-      formData.password.length >= 8
-    ) {
-      setError("confirmPassword", true, "Passwords don't match");
-    } else {
-      setError("confirmPassword", false, "");
-    }
-
-    if (!formData.terms) {
-      setError("terms", true, "Accept the terms to continue");
-    } else {
-      setError("terms", false, "");
-    }
+    const errors = validateForm(
+      formData.callsign.value,
+      formData.email.value,
+      formData.password.value,
+      formData.confirmPassword.value,
+      formData.terms,
+    );
+    setFormData({
+      ...formData,
+      callsign: { ...formData.callsign, neverChecked: false },
+      email: { ...formData.email, neverChecked: false },
+      password: { ...formData.password, neverChecked: false },
+      confirmPassword: { ...formData.confirmPassword, neverChecked: false },
+    });
+    setErrors(errors);
+    // const hasError = Object.values(errors).some((err) => err !== "");
   }
 
   function checkPasswordStrength(password) {
@@ -147,7 +161,7 @@ function App() {
     if (/[^a-zA-Z0-9 ]/.test(password) && passMinimun) {
       score++;
     }
-    return scoreLabels[score];
+    return scoreLabels[Math.min(score, scoreLabels.length - 1)];
   }
 
   const strength = passwordStrengthLevels[passwordStrength];
@@ -161,7 +175,7 @@ function App() {
         className="pointer-events-none absolute -right-[30rem] top-1/2 z-0 hidden size-[60rem] -translate-y-1/2 lg:block"
       />
 
-      <div className="relative z-10 mx-auto grid min-h-screen w-full max-w-[1120px] content-start gap-7 py-8 lg:grid-cols-[minmax(0,1fr)_480px] lg:items-center lg:gap-8 lg:py-0 xl:gap-20">
+      <div className="relative z-10 mx-auto grid w-full max-w-[1120px] content-start gap-7 py-8 lg:grid-cols-[minmax(0,1fr)_480px] lg:items-center lg:gap-8 lg:py-0 xl:gap-20">
         <section
           aria-label="NEONCORE sign-up introduction"
           className="min-w-0 lg:my-auto"
@@ -247,7 +261,7 @@ function App() {
             <p className="preset-6 text-neutral-400 md:hidden">All required</p>
           </header>
 
-          <form className="mt-6" onSubmit={validateForm} noValidate>
+          <form className="mt-6" onSubmit={handleSubmit} noValidate>
             <div className="space-y-5">
               <div>
                 <label
@@ -264,12 +278,43 @@ function App() {
                     type="text"
                     placeholder="e.g. Vortex_07"
                     autoComplete="nickname"
-                    value={formData.callsign}
-                    onChange={handleChange}
+                    value={formData.callsign.value}
+                    onChange={(e) => {
+                      handleChange(e);
+                      if (!formData.callsign.neverChecked) {
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          callsign: validateCallsign(e.target.value),
+                        }));
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (!formData.callsign.neverFilled) {
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          callsign: validateCallsign(e.target.value),
+                        }));
+                        setFormData({
+                          ...formData,
+                          callsign: {
+                            ...formData.callsign,
+                            neverChecked: false,
+                          },
+                        });
+                      }
+                    }}
                     className={`${inputClasses} pr-12`}
                   />
+                  {!errors.callsign && !formData.callsign.neverChecked && (
+                    <img
+                      src={successTickIcon}
+                      alt=""
+                      aria-hidden="true"
+                      className="pointer-events-none absolute right-3 top-1/2 size-5 -translate-y-1/2"
+                    />
+                  )}
                 </div>
-                {errors.callsign.isError ? (
+                {errors.callsign ? (
                   <p className="preset-7 mt-3 text-red-400 flex items-center gap-3">
                     <img
                       src={alertIcon}
@@ -277,7 +322,7 @@ function App() {
                       aria-hidden="true"
                       className="inline-block"
                     />{" "}
-                    {errors.callsign.message}
+                    {errors.callsign}
                   </p>
                 ) : (
                   <p className="preset-7 mt-3 text-neutral-400">
@@ -301,12 +346,43 @@ function App() {
                     type="email"
                     placeholder="you@example.com"
                     autoComplete="email"
-                    value={formData.email}
-                    onChange={handleChange}
+                    value={formData.email.value}
+                    onChange={(e) => {
+                      handleChange(e);
+                      if (!formData.email.neverChecked) {
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          email: validateEmail(e.target.value),
+                        }));
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (!formData.email.neverFilled) {
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          email: validateEmail(e.target.value),
+                        }));
+                        setFormData((prevFormData) => ({
+                          ...prevFormData,
+                          email: {
+                            ...prevFormData.email,
+                            neverChecked: false,
+                          },
+                        }));
+                      }
+                    }}
                     className={`${inputClasses} pr-12`}
                   />
+                  {!errors.email && !formData.email.neverChecked && (
+                    <img
+                      src={successTickIcon}
+                      alt=""
+                      aria-hidden="true"
+                      className="pointer-events-none absolute right-3 top-1/2 size-5 -translate-y-1/2"
+                    />
+                  )}
                 </div>
-                {errors.email.isError && (
+                {errors.email && (
                   <p className="preset-7 mt-3 text-red-400 flex items-center gap-3">
                     <img
                       src={alertIcon}
@@ -314,7 +390,7 @@ function App() {
                       aria-hidden="true"
                       className="inline-block"
                     />{" "}
-                    {errors.email.message}
+                    {errors.email}
                   </p>
                 )}
               </div>
@@ -333,18 +409,50 @@ function App() {
                     name="password"
                     type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
-                    value={formData.password}
-                    onChange={(event) => {
-                      handleChange(event);
-                      setPasswordStrength(
-                        checkPasswordStrength(event.target.value),
-                      );
-                      if (event.target.value.length < 1) {
-                        setPasswordStrength(null);
+                    value={formData.password.value}
+                    onChange={(e) => {
+                      handleChange(e);
+                      if (!formData.password.neverChecked) {
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          password: validatePassword(e.target.value),
+                        }));
+                      }
+                      if (!formData.confirmPassword.neverChecked) {
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          confirmPassword: validateConfirmPassword(
+                            e.target.value,
+                            formData.confirmPassword.value,
+                          ),
+                        }));
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (!formData.password.neverFilled) {
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          password: validatePassword(e.target.value),
+                        }));
+                        setFormData((prevFormData) => ({
+                          ...prevFormData,
+                          password: {
+                            ...prevFormData.password,
+                            neverChecked: false,
+                          },
+                        }));
                       }
                     }}
                     className={`${inputClasses} pr-20`}
                   />
+                  {!errors.password && !formData.password.neverChecked && (
+                    <img
+                      src={successTickIcon}
+                      alt=""
+                      aria-hidden="true"
+                      className="pointer-events-none absolute right-12 top-1/2 size-5 -translate-y-1/2"
+                    />
+                  )}
                   <button
                     type="button"
                     aria-label="Show password"
@@ -384,7 +492,7 @@ function App() {
                     </span>
                   )}
                 </div>
-                {errors.password.isError ? (
+                {errors.password ? (
                   <p className="preset-7 mt-2 flex items-center gap-3 pr-16 text-red-400">
                     <img
                       src={alertIcon}
@@ -392,7 +500,7 @@ function App() {
                       aria-hidden="true"
                       className="inline-block"
                     />{" "}
-                    {errors.password.message}
+                    {errors.password}
                   </p>
                 ) : (
                   <p className="preset-7 mt-2 text-neutral-400">
@@ -415,10 +523,48 @@ function App() {
                     name="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     autoComplete="new-password"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
+                    value={formData.confirmPassword.value}
+                    onChange={(e) => {
+                      handleChange(e);
+                      if (!formData.confirmPassword.neverChecked) {
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          confirmPassword: validateConfirmPassword(
+                            formData.password.value,
+                            e.target.value,
+                          ),
+                        }));
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (!formData.confirmPassword.neverFilled) {
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          confirmPassword: validateConfirmPassword(
+                            formData.password.value,
+                            e.target.value,
+                          ),
+                        }));
+                        setFormData((prevFormData) => ({
+                          ...prevFormData,
+                          confirmPassword: {
+                            ...prevFormData.confirmPassword,
+                            neverChecked: false,
+                          },
+                        }));
+                      }
+                    }}
                     className={`${inputClasses} pr-20`}
                   />
+                  {!errors.confirmPassword &&
+                    !formData.confirmPassword.neverChecked && (
+                      <img
+                        src={successTickIcon}
+                        alt=""
+                        aria-hidden="true"
+                        className="pointer-events-none absolute right-12 top-1/2 size-5 -translate-y-1/2"
+                      />
+                    )}
                   <button
                     type="button"
                     aria-label="Show confirm password"
@@ -442,7 +588,7 @@ function App() {
                     )}
                   </button>
                 </div>
-                {errors.confirmPassword.isError && (
+                {errors.confirmPassword && (
                   <p className="preset-7 mt-3 text-red-400 flex items-center gap-3">
                     <img
                       src={alertIcon}
@@ -450,7 +596,7 @@ function App() {
                       aria-hidden="true"
                       className="inline-block"
                     />{" "}
-                    {errors.confirmPassword.message}
+                    {errors.confirmPassword}
                   </p>
                 )}
               </div>
@@ -463,7 +609,13 @@ function App() {
                   name="terms"
                   type="checkbox"
                   checked={formData.terms}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      terms: validateTerms(e.target.checked),
+                    }));
+                  }}
                   className="size-full appearance-none border border-neutral-600 bg-navy-950 cursor-pointer focus-visible:outline-2 focus-visible:outline-lime-500 focus-visible:outline-offset-3 checked:bg-lime-500 checked:border-none"
                 />
                 {formData.terms && (
@@ -493,7 +645,7 @@ function App() {
                 .
               </label>
             </div>
-            {errors.terms.isError && (
+            {errors.terms && (
               <p className="preset-7 mt-3 text-red-400 flex items-center gap-3">
                 <img
                   src={alertIcon}
@@ -501,7 +653,7 @@ function App() {
                   aria-hidden="true"
                   className="inline-block"
                 />{" "}
-                {errors.terms.message}
+                {errors.terms}
               </p>
             )}
 
