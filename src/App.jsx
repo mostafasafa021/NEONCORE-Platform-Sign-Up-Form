@@ -44,7 +44,7 @@ function App() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const passwordStrength = formData.password.value
-    ? checkPasswordStrength(formData.password)
+    ? checkPasswordStrength(formData.password.value)
     : null;
 
   function handleChange(event) {
